@@ -3,16 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^4.9.14",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "recharts": "^1.8.5"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build-for-dark": "PUBLIC_URL=DARK_STATIC_ASSETS_BASE_URL react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

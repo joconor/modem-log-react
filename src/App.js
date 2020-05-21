@@ -1,26 +1,44 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import CssBaseline from '@material-ui/core/CssBaseline';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+
+import './App.css';
+import Status from './Status';
+
+class App extends Component {
+
+  constructor(props){
+    super(props)
+
+    this.state = {
+      hosts: []
+    }
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+      <CssBaseline />
+      <AppBar position="static" color="primary">
+        <Toolbar>
+          <Typography variant="h6" color="inherit">
+            Cable Modem Health Dashboard
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <Grid container spacing={0} justify="center">
+        <Grid item xs={10} md={8}>
+        <Status />
+      </Grid>
+      </Grid>
+      </React.Fragment>
+    );
+  }
 }
+
 
 export default App;
