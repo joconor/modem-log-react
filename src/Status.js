@@ -68,7 +68,9 @@ class Status extends Component {
       return {
         'name': new Date(lastAnalysisDate - (oneHour * x)).toLocaleString(),
         'uv': status[hourKeys[x]].CMStatus16Count,
-        'pv': status[hourKeys[x]].CMStatus24Count
+        'pv': status[hourKeys[x]].CMStatus24Count,
+        't3': status[hourKeys[x]].T3TimeoutCount,
+        't4': status[hourKeys[x]].T4TimeoutCount
       }
     });
     return hours;
@@ -77,7 +79,7 @@ class Status extends Component {
   render() {
     return (<div>
       <Button style={{ margin: '10px' }} variant="contained" color="primary" onClick={this.onSubmit}>Refresh Statistics</Button>
-      <BarChart width={800} height={300} data={this.formattedData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+      <BarChart width={1000} height={300} data={this.formattedData} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="name" />
         <YAxis />
@@ -85,6 +87,8 @@ class Status extends Component {
         <Legend />
         <Bar dataKey="pv" name="Loss of FEC" fill="#8884d8" />
         <Bar dataKey="uv" name="Regain FEC" fill="#82ca9d" />
+        <Bar dataKey="t3" name="T3 Timeout" fill="#cccc00" />
+        <Bar dataKey="t4" name="T4 Timeout" fill="#ff3333" />
       </BarChart>
       <Paper style={{ overflowX: 'scroll', height: 512, whiteSpace: "pre-line" }} elevation={3} >
         <Typography> {
