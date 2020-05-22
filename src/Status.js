@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import Hidden from '@material-ui/core/Hidden';
 
 import {
   BarChart,
@@ -67,8 +68,8 @@ class Status extends Component {
     let hours = [...Array(24).keys()].map(x => {
       return {
         'name': new Date(lastAnalysisDate - (oneHour * x)).toLocaleString(),
-        'uv': status[hourKeys[x]].CMStatus16Count,
-        'pv': status[hourKeys[x]].CMStatus24Count,
+        'loseFEC': status[hourKeys[x]].CMStatus16Count,
+        'recoverFEC': status[hourKeys[x]].CMStatus24Count,
         't3': status[hourKeys[x]].T3TimeoutCount,
         't4': status[hourKeys[x]].T4TimeoutCount
       }
@@ -85,16 +86,26 @@ class Status extends Component {
         <YAxis />
         <Tooltip />
         <Legend />
-        <Bar dataKey="pv" name="Loss of FEC" fill="#8884d8" />
-        <Bar dataKey="uv" name="Regain FEC" fill="#82ca9d" />
-        <Bar dataKey="t3" name="T3 Timeout" fill="#cccc00" />
-        <Bar dataKey="t4" name="T4 Timeout" fill="#ff3333" />
+        <Bar dataKey="loseFEC" name="Loss of FEC" fill="#8884d8" />
+        <Bar dataKey="recoverFEC" name="Regain FEC" fill="#82ca9d" />
+        {/* <Bar dataKey="t3" name="T3 Timeout" fill="#cccc00" />
+        <Bar dataKey="t4" name="T4 Timeout" fill="#ff3333" /> */}
       </BarChart>
-      <Paper style={{ overflowX: 'scroll', height: 512, whiteSpace: "pre-line" }} elevation={3} >
-        <Typography> {
-          JSON.stringify(this.state.statusJson, null, 2)
-        } </Typography>
-      </Paper>
+      <Typography>
+        Last event collection &amp; analysis time: {(this.state.statusJson && new Date(this.state.statusJson.currentStats.lastAnalysisDate).toLocaleString()) || ''}<br />
+        <br /><u>24 Hour totals:</u><br />
+        Loss of FEC: {(this.state.statusJson && this.state.statusJson["24HoursAgoToNow"].CMStatus16Count) || 0}<br />
+        Recovery of FEC: {(this.state.statusJson && this.state.statusJson["24HoursAgoToNow"].CMStatus24Count) || 0}<br />
+        T3 Timeouts: {(this.state.statusJson && this.state.statusJson["24HoursAgoToNow"].T3TimeoutCount) || 0}<br />
+        T4 Timeouts: {(this.state.statusJson && this.state.statusJson["24HoursAgoToNow"].T4TimeoutCount) || 0}
+      </Typography>
+      <Hidden xlDown>
+        <Paper style={{ display: false, overflowX: 'scroll', height: 512, whiteSpace: "pre-line" }} elevation={3} >
+          <Typography> {
+            JSON.stringify(this.state.statusJson, null, 2)
+          } </Typography>
+        </Paper>
+      </Hidden>
     </div>)
   }
 }
