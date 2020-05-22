@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import Hidden from '@material-ui/core/Hidden';
+import RefreshIcon from '@material-ui/icons/Refresh';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 import {
   BarChart,
@@ -11,10 +12,19 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend
+  Legend,
+  ResponsiveContainer
 } from 'recharts';
 
 import { getStatus } from './api';
+
+const theme = createMuiTheme({
+  typography: {
+    body2: {
+      fontSize: 10
+    }
+  }
+});
 
 class Status extends Component {
   constructor(props) {
@@ -22,7 +32,8 @@ class Status extends Component {
 
     this.state = {
       statusJson: null,
-      error: null
+      error: null,
+      showDebugInfo: false
     };
   }
 
@@ -79,18 +90,20 @@ class Status extends Component {
 
   render() {
     return (<div>
-      <Button style={{ margin: '10px' }} variant="contained" color="primary" onClick={this.onSubmit}>Refresh Statistics</Button>
-      <BarChart width={1000} height={300} data={this.formattedData} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Bar dataKey="loseFEC" name="Loss of FEC" fill="#8884d8" />
-        <Bar dataKey="recoverFEC" name="Regain FEC" fill="#82ca9d" />
-        {/* <Bar dataKey="t3" name="T3 Timeout" fill="#cccc00" />
+      <Button style={{ margin: '10px' }} variant="contained" color="primary" onClick={this.onSubmit}><RefreshIcon></RefreshIcon></Button>
+      <ResponsiveContainer height={400}>
+        <BarChart data={this.formattedData} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="loseFEC" name="Loss of FEC" fill="#8884d8" />
+          <Bar dataKey="recoverFEC" name="Regain FEC" fill="#82ca9d" />
+          {/* <Bar dataKey="t3" name="T3 Timeout" fill="#cccc00" />
         <Bar dataKey="t4" name="T4 Timeout" fill="#ff3333" /> */}
-      </BarChart>
+        </BarChart>
+      </ResponsiveContainer>
       <Typography>
         Last event collection &amp; analysis time: {(this.state.statusJson && new Date(this.state.statusJson.currentStats.lastAnalysisDate).toLocaleString()) || ''}<br />
         <br /><u>24 Hour totals:</u><br />
@@ -99,13 +112,15 @@ class Status extends Component {
         T3 Timeouts: {(this.state.statusJson && this.state.statusJson["24HoursAgoToNow"].T3TimeoutCount) || 0}<br />
         T4 Timeouts: {(this.state.statusJson && this.state.statusJson["24HoursAgoToNow"].T4TimeoutCount) || 0}
       </Typography>
-      <Hidden xlDown>
-        <Paper style={{ display: false, overflowX: 'scroll', height: 512, whiteSpace: "pre-line" }} elevation={3} >
-          <Typography> {
-            JSON.stringify(this.state.statusJson, null, 2)
-          } </Typography>
+      {this.state.showDebugInfo ? (
+        <Paper style={{ display: false, overflowX: 'scroll', height: 256, width: 768, whiteSpace: "pre-line" }} elevation={3} >
+          <ThemeProvider theme={theme}>
+            <Typography variant="body2"> {
+              JSON.stringify(this.state.statusJson, null, 2)
+            } </Typography>
+          </ThemeProvider>
         </Paper>
-      </Hidden>
+      ) : (<br />)}
     </div>)
   }
 }
