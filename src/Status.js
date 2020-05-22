@@ -3,6 +3,7 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import RefreshIcon from '@material-ui/icons/Refresh';
+import DeveloperModeIcon from '@material-ui/icons/DeveloperMode'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 import {
@@ -69,6 +70,12 @@ class Status extends Component {
     )
   }
 
+  toggleDevInfo = () => {
+    this.setState({
+      showDebugInfo: !this.state.showDebugInfo
+    });
+  }
+
   formatStatus(status) {
     const hourKeys = ['01HourAgoToNow', '02to01HourAgo', '03to02HoursAgo', '04to03HoursAgo', '05to04HoursAgo', '06to05HoursAgo',
       '07to06HoursAgo', '08to07HoursAgo', '09to08HoursAgo', '10to09HoursAgo', '11to10HoursAgo', '12to11HoursAgo',
@@ -90,7 +97,8 @@ class Status extends Component {
 
   render() {
     return (<div>
-      <Button style={{ margin: '10px' }} variant="contained" color="primary" onClick={this.onSubmit}><RefreshIcon></RefreshIcon></Button>
+      <Button style={{ margin: '10px' }} variant="contained" color="primary" onClick={this.onSubmit}><RefreshIcon /></Button>
+      <Button style={{ margin: '10px' }} variant="contained" color="primary" onClick={this.toggleDevInfo}><DeveloperModeIcon /></Button>
       <ResponsiveContainer height={400}>
         <BarChart data={this.formattedData} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" />
