@@ -108,8 +108,6 @@ class Status extends Component {
           <Legend />
           <Bar dataKey="loseFEC" name="Loss of FEC" fill="#8884d8" />
           <Bar dataKey="recoverFEC" name="Regain FEC" fill="#82ca9d" />
-          {/* <Bar dataKey="t3" name="T3 Timeout" fill="#cccc00" />
-        <Bar dataKey="t4" name="T4 Timeout" fill="#ff3333" /> */}
         </BarChart>
       </ResponsiveContainer>
       <Typography>
