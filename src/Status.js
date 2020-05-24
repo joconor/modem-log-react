@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import DeveloperModeIcon from '@material-ui/icons/DeveloperMode'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import { startOfToday, formatRelative } from 'date-fns'
+import { startOfToday, formatRelative, isYesterday } from 'date-fns'
 
 import {
   BarChart,
@@ -15,7 +15,8 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer
+  ResponsiveContainer,
+  ReferenceArea
 } from 'recharts';
 
 import { getStatus } from './api';
@@ -42,7 +43,9 @@ class Status extends Component {
   componentDidMount() {
     getStatus(
       (result) => {
-        this.formattedData = this.formatStatus(result);
+        let hoursAndFirstYesterday = this.formatStatus(result);
+        this.formattedData = hoursAndFirstYesterday.hours;
+        this.firstYesterday = hoursAndFirstYesterday.firstYesterday;
         this.setState({
           statusJson: result
         })
@@ -58,7 +61,9 @@ class Status extends Component {
   onSubmit = () => {
     getStatus(
       (result) => {
-        this.formattedData = this.formatStatus(result);
+        let hoursAndFirstYesterday = this.formatStatus(result);
+        this.formattedData = hoursAndFirstYesterday.hours;
+        this.firstYesterday = hoursAndFirstYesterday.firstYesterday;
         this.setState({
           statusJson: result
         })
@@ -87,13 +92,20 @@ class Status extends Component {
     let hours = [...Array(24).keys()].map(x => {
       return {
         'name': new Date(lastAnalysisDate - (oneHour * x)).toLocaleString(),
+        'date': new Date(lastAnalysisDate - (oneHour * x)),
         'loseFEC': status[hourKeys[x]].CMStatus16Count,
         'recoverFEC': status[hourKeys[x]].CMStatus24Count,
         't3': status[hourKeys[x]].T3TimeoutCount,
         't4': status[hourKeys[x]].T4TimeoutCount
       }
     });
-    return hours;
+    let firstYesterday = hours.find(x => {
+      return isYesterday(x.date);
+    });
+    return {
+      'hours': hours,
+      'firstYesterday': firstYesterday
+    }
   }
 
   render() {
@@ -109,6 +121,7 @@ class Status extends Component {
           <Legend />
           <Bar dataKey="loseFEC" name="Loss of FEC" fill="#8884d8" />
           <Bar dataKey="recoverFEC" name="Regain FEC" fill="#82ca9d" />
+          <ReferenceArea x1={this.firstYesterday && this.firstYesterday.name} />
         </BarChart>
       </ResponsiveContainer>
       <Typography>
