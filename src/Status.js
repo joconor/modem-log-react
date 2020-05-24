@@ -5,6 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import DeveloperModeIcon from '@material-ui/icons/DeveloperMode'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { startOfToday, formatRelative } from 'date-fns'
 
 import {
   BarChart,
@@ -111,7 +112,7 @@ class Status extends Component {
         </BarChart>
       </ResponsiveContainer>
       <Typography>
-        Last event collection &amp; analysis time: {(this.state.statusJson && new Date(this.state.statusJson.currentStats.lastAnalysisDate).toLocaleString()) || ''}<br />
+        Last event collection &amp; analysis time {(this.state.statusJson && ' was '.concat(formatRelative(new Date(this.state.statusJson.currentStats.lastAnalysisDate), startOfToday()))) || ' is unknown'}<br />
         <br /><u>24 Hour totals:</u><br />
         Loss of FEC: {(this.state.statusJson && this.state.statusJson["24HoursAgoToNow"].CMStatus16Count) || 0}<br />
         Recovery of FEC: {(this.state.statusJson && this.state.statusJson["24HoursAgoToNow"].CMStatus24Count) || 0}<br />
