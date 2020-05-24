@@ -4,7 +4,6 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import DeveloperModeIcon from '@material-ui/icons/DeveloperMode'
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { startOfToday, formatRelative, isYesterday, format } from 'date-fns'
 
 import {
@@ -20,14 +19,6 @@ import {
 } from 'recharts';
 
 import { getStatus } from './api';
-
-const theme = createMuiTheme({
-  typography: {
-    body2: {
-      fontSize: 10
-    }
-  }
-});
 
 class Status extends Component {
   constructor(props) {
@@ -134,12 +125,8 @@ class Status extends Component {
         T4 Timeouts: {(this.state.statusJson && this.state.statusJson["24HoursAgoToNow"].T4TimeoutCount) || 0}
       </Typography>
       {this.state.showDebugInfo ? (
-        <Paper style={{ display: false, overflowX: 'scroll', height: 256, width: 768, whiteSpace: "pre-line" }} elevation={3} >
-          <ThemeProvider theme={theme}>
-            <Typography variant="body2"> {
-              JSON.stringify(this.state.statusJson, null, 2)
-            } </Typography>
-          </ThemeProvider>
+        <Paper style={{ display: false, overflowX: 'scroll', height: 256, width: 768 }} elevation={3} >
+          <pre>{JSON.stringify(this.state.statusJson, null, 2)}</pre>
         </Paper>
       ) : (<br />)}
     </div>)
