@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import DeveloperModeIcon from '@material-ui/icons/DeveloperMode'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import { startOfToday, formatRelative, isYesterday } from 'date-fns'
+import { startOfToday, formatRelative, isYesterday, format } from 'date-fns'
 
 import {
   BarChart,
@@ -90,9 +90,10 @@ class Status extends Component {
     const oneHour = 1000 * 60 * 60;
     let lastAnalysisDate = new Date(status.currentStats.lastAnalysisDate).valueOf();
     let hours = [...Array(24).keys()].map(x => {
+      let hoursAgo = new Date(lastAnalysisDate - (oneHour * x));
       return {
-        'name': new Date(lastAnalysisDate - (oneHour * x)).toLocaleString(),
-        'date': new Date(lastAnalysisDate - (oneHour * x)),
+        'name': format(hoursAgo, 'p'),
+        'date': hoursAgo,
         'loseFEC': status[hourKeys[x]].CMStatus16Count,
         'recoverFEC': status[hourKeys[x]].CMStatus24Count,
         't3': status[hourKeys[x]].T3TimeoutCount,
