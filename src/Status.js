@@ -47,10 +47,10 @@ class Status extends Component {
     if(!this.props.statusJson) {
       return null;
     }
-    const {hours: formattedData, firstYesterday} = this.formatStatus(this.props.statusJson);
+    const {hours, firstYesterday} = this.formatStatus(this.props.statusJson);
     return (<div>
       <ResponsiveContainer height={400}>
-        <BarChart data={formattedData} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
+        <BarChart data={hours} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
           <YAxis />
