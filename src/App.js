@@ -29,27 +29,20 @@ class App extends Component {
     }
   }
 
-  setStatusInfo() {
-    getStatus(
-      (result) => {
-        this.setState({
-          statusJson: result
-        })
-      },
-      (error) => {
-        this.setState({
-          error: error.message
-        })
-      }
-    )
+  async newSetStatusInfo() {
+    try {
+      this.setState({statusJson: await getStatus()});
+    } catch (error) {
+      this.setState({error: error.message})
+    }
   }
 
-  componentDidMount() {
-    this.setStatusInfo();
-  }
+  async componentDidMount() {
+    this.newSetStatusInfo();
+  };
 
-  onSubmit = () => {
-    this.setStatusInfo();
+  onSubmit = async () => {
+    this.newSetStatusInfo();
   }
 
   toggleDevInfo = () => {
