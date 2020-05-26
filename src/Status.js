@@ -1,9 +1,5 @@
 import React, { Component } from 'react';
-import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import RefreshIcon from '@material-ui/icons/Refresh';
-import DeveloperModeIcon from '@material-ui/icons/DeveloperMode'
 import { startOfToday, formatRelative, isYesterday, format } from 'date-fns'
 
 import {
@@ -18,60 +14,7 @@ import {
   ReferenceArea
 } from 'recharts';
 
-import { getStatus } from './api';
-
 class Status extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      statusJson: null,
-      error: null,
-      showDebugInfo: false
-    };
-  }
-
-  componentDidMount() {
-    getStatus(
-      (result) => {
-        let hoursAndFirstYesterday = this.formatStatus(result);
-        this.formattedData = hoursAndFirstYesterday.hours;
-        this.firstYesterday = hoursAndFirstYesterday.firstYesterday;
-        this.setState({
-          statusJson: result
-        })
-      },
-      (error) => {
-        this.setState({
-          error: error.message
-        })
-      }
-    )
-  }
-
-  onSubmit = () => {
-    getStatus(
-      (result) => {
-        let hoursAndFirstYesterday = this.formatStatus(result);
-        this.formattedData = hoursAndFirstYesterday.hours;
-        this.firstYesterday = hoursAndFirstYesterday.firstYesterday;
-        this.setState({
-          statusJson: result
-        })
-      },
-      (error) => {
-        this.setState({
-          error: error.message
-        })
-      }
-    )
-  }
-
-  toggleDevInfo = () => {
-    this.setState({
-      showDebugInfo: !this.state.showDebugInfo
-    });
-  }
 
   formatStatus(status) {
     const hourKeys = ['01HourAgoToNow', '02to01HourAgo', '03to02HoursAgo', '04to03HoursAgo', '05to04HoursAgo', '06to05HoursAgo',
@@ -101,9 +44,12 @@ class Status extends Component {
   }
 
   render() {
+    if (this.props.statusJson) {
+      let hoursAndFirstYesterday = this.formatStatus(this.props.statusJson);
+      this.formattedData = hoursAndFirstYesterday.hours;
+      this.firstYesterday = hoursAndFirstYesterday.firstYesterday;
+    }
     return (<div>
-      <Button style={{ margin: '10px' }} variant="contained" color="primary" onClick={this.onSubmit}><RefreshIcon /></Button>
-      <Button style={{ margin: '10px' }} variant="contained" color="primary" onClick={this.toggleDevInfo}><DeveloperModeIcon /></Button>
       <ResponsiveContainer height={400}>
         <BarChart data={this.formattedData} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" />
@@ -117,18 +63,13 @@ class Status extends Component {
         </BarChart>
       </ResponsiveContainer>
       <Typography>
-        Last event collection &amp; analysis time {(this.state.statusJson && ' was '.concat(formatRelative(new Date(this.state.statusJson.currentStats.lastAnalysisDate), startOfToday()))) || ' is unknown'}<br />
+        Last event collection &amp; analysis time {(this.props.statusJson && ' was '.concat(formatRelative(new Date(this.props.statusJson.currentStats.lastAnalysisDate), startOfToday()))) || ' is unknown'}<br />
         <br /><u>24 Hour totals:</u><br />
-        Loss of FEC: {(this.state.statusJson && this.state.statusJson["24HoursAgoToNow"].CMStatus16Count) || 0}<br />
-        Recovery of FEC: {(this.state.statusJson && this.state.statusJson["24HoursAgoToNow"].CMStatus24Count) || 0}<br />
-        T3 Timeouts: {(this.state.statusJson && this.state.statusJson["24HoursAgoToNow"].T3TimeoutCount) || 0}<br />
-        T4 Timeouts: {(this.state.statusJson && this.state.statusJson["24HoursAgoToNow"].T4TimeoutCount) || 0}
+        Loss of FEC: {(this.props.statusJson && this.props.statusJson["24HoursAgoToNow"].CMStatus16Count) || 0}<br />
+        Recovery of FEC: {(this.props.statusJson && this.props.statusJson["24HoursAgoToNow"].CMStatus24Count) || 0}<br />
+        T3 Timeouts: {(this.props.statusJson && this.props.statusJson["24HoursAgoToNow"].T3TimeoutCount) || 0}<br />
+        T4 Timeouts: {(this.props.statusJson && this.props.statusJson["24HoursAgoToNow"].T4TimeoutCount) || 0}
       </Typography>
-      {this.state.showDebugInfo ? (
-        <Paper style={{ display: false, overflowX: 'scroll', height: 256, width: 768 }} elevation={3} >
-          <pre>{JSON.stringify(this.state.statusJson, null, 2)}</pre>
-        </Paper>
-      ) : (<br />)}
     </div>)
   }
 }
