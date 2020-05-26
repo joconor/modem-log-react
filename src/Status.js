@@ -44,14 +44,13 @@ class Status extends Component {
   }
 
   render() {
-    if (this.props.statusJson) {
-      let hoursAndFirstYesterday = this.formatStatus(this.props.statusJson);
-      this.formattedData = hoursAndFirstYesterday.hours;
-      this.firstYesterday = hoursAndFirstYesterday.firstYesterday;
+    if(!this.props.statusJson) {
+      return null;
     }
+    const {hours: formattedData, firstYesterday} = this.formatStatus(this.props.statusJson);
     return (<div>
       <ResponsiveContainer height={400}>
-        <BarChart data={this.formattedData} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
+        <BarChart data={formattedData} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
           <YAxis />
@@ -59,16 +58,16 @@ class Status extends Component {
           <Legend />
           <Bar dataKey="loseFEC" name="Loss of FEC" fill="#8884d8" />
           <Bar dataKey="recoverFEC" name="Regain FEC" fill="#82ca9d" />
-          <ReferenceArea x1={this.firstYesterday && this.firstYesterday.name} />
+          <ReferenceArea x1={firstYesterday.name} />
         </BarChart>
       </ResponsiveContainer>
       <Typography>
-        Last event collection &amp; analysis time {(this.props.statusJson && ' was '.concat(formatRelative(new Date(this.props.statusJson.currentStats.lastAnalysisDate), startOfToday()))) || ' is unknown'}<br />
+        Last event collection &amp; analysis time {' was '.concat(formatRelative(new Date(this.props.statusJson.currentStats.lastAnalysisDate), startOfToday()))}<br />
         <br /><u>24 Hour totals:</u><br />
-        Loss of FEC: {(this.props.statusJson && this.props.statusJson["24HoursAgoToNow"].CMStatus16Count) || 0}<br />
-        Recovery of FEC: {(this.props.statusJson && this.props.statusJson["24HoursAgoToNow"].CMStatus24Count) || 0}<br />
-        T3 Timeouts: {(this.props.statusJson && this.props.statusJson["24HoursAgoToNow"].T3TimeoutCount) || 0}<br />
-        T4 Timeouts: {(this.props.statusJson && this.props.statusJson["24HoursAgoToNow"].T4TimeoutCount) || 0}
+        Loss of FEC: {(this.props.statusJson["24HoursAgoToNow"].CMStatus16Count) || 0}<br />
+        Recovery of FEC: {(this.props.statusJson["24HoursAgoToNow"].CMStatus24Count) || 0}<br />
+        T3 Timeouts: {(this.props.statusJson["24HoursAgoToNow"].T3TimeoutCount) || 0}<br />
+        T4 Timeouts: {(this.props.statusJson["24HoursAgoToNow"].T4TimeoutCount) || 0}
       </Typography>
     </div>)
   }
