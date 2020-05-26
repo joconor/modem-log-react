@@ -61,14 +61,14 @@ class Status extends Component {
           <ReferenceArea x1={firstYesterday.name} />
         </BarChart>
       </ResponsiveContainer>
-      <Typography>
+      {/* <Typography>
         Last event collection &amp; analysis time {' was '.concat(formatRelative(new Date(this.props.statusJson.currentStats.lastAnalysisDate), startOfToday()))}<br />
         <br /><u>24 Hour totals:</u><br />
         Loss of FEC: {(this.props.statusJson["24HoursAgoToNow"].CMStatus16Count) || 0}<br />
         Recovery of FEC: {(this.props.statusJson["24HoursAgoToNow"].CMStatus24Count) || 0}<br />
         T3 Timeouts: {(this.props.statusJson["24HoursAgoToNow"].T3TimeoutCount) || 0}<br />
         T4 Timeouts: {(this.props.statusJson["24HoursAgoToNow"].T4TimeoutCount) || 0}
-      </Typography>
+      </Typography> */}
     </div>)
   }
 }

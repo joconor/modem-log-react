@@ -8,10 +8,12 @@ import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import DeveloperModeIcon from '@material-ui/icons/DeveloperMode'
+import { startOfToday, formatRelative } from 'date-fns'
 
 
 import './App.css';
 import Status from './Status';
+import StatusTable from './StatusTable';
 import Debug from './Debug';
 
 import { getStatus } from './api';
@@ -31,9 +33,9 @@ class App extends Component {
 
   async newSetStatusInfo() {
     try {
-      this.setState({statusJson: await getStatus()});
+      this.setState({ statusJson: await getStatus() });
     } catch (error) {
-      this.setState({error: error.message})
+      this.setState({ error: error.message })
     }
   }
 
@@ -67,7 +69,13 @@ class App extends Component {
           </Toolbar>
         </AppBar>
         <Box mx={2}>
+          { this.state.statusJson ? (
+            <Typography>
+              Last event collection &amp; analysis time {' was '.concat(formatRelative(new Date(this.state.statusJson.currentStats.lastAnalysisDate), startOfToday()))}<br />
+            </Typography>
+          ) : <br />}
           <Status statusJson={this.state.statusJson} />
+          <StatusTable />
           {this.state.showDebugInfo ? (
             <Debug debugInfo={this.state.statusJson} />
           ) : (<br />)}
@@ -76,6 +84,5 @@ class App extends Component {
     );
   }
 }
-
 
 export default App;
