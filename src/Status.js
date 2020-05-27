@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import Typography from '@material-ui/core/Typography';
-import { startOfToday, formatRelative, isYesterday, format } from 'date-fns'
+import { isYesterday, format } from 'date-fns'
 
 import {
   BarChart,
@@ -17,16 +16,16 @@ import {
 class Status extends Component {
 
   formatStatus(status) {
-    const hourKeys = ['01HourAgoToNow', '02to01HourAgo', '03to02HoursAgo', '04to03HoursAgo', '05to04HoursAgo', '06to05HoursAgo',
-      '07to06HoursAgo', '08to07HoursAgo', '09to08HoursAgo', '10to09HoursAgo', '11to10HoursAgo', '12to11HoursAgo',
-      '13to12HoursAgo', '14to13HoursAgo', '15to14HoursAgo', '16to15HoursAgo', '17to16HoursAgo', '18to17HoursAgo',
-      '19to18HoursAgo', '20to19HoursAgo', '21to20HoursAgo', '22to21HoursAgo', '23to22HoursAgo', '24to23HoursAgo'];
+    const hourKeys = ['currentHour', 'minus01Hour', 'minus02Hours', 'minus03Hours', 'minus04Hours', 'minus05Hours',
+      'minus06Hours', 'minus07Hours', 'minus08Hours', 'minus09Hours', 'minus10Hours', 'minus11Hours',
+      'minus12Hours', 'minus13Hours', 'minus14Hours', 'minus15Hours', 'minus16Hours', 'minus17Hours',
+      'minus18Hours', 'minus19Hours', 'minus20Hours', 'minus21Hours', 'minus22Hours', 'minus23Hours'];
     const oneHour = 1000 * 60 * 60;
     let lastAnalysisDate = new Date(status.currentStats.lastAnalysisDate).valueOf();
     let hours = [...Array(24).keys()].map(x => {
       let hoursAgo = new Date(lastAnalysisDate - (oneHour * x));
       return {
-        'name': format(hoursAgo, 'p'),
+        'name': format(hoursAgo, 'hbbbbb'),
         'date': hoursAgo,
         'loseFEC': status[hourKeys[x]].CMStatus16Count,
         'recoverFEC': status[hourKeys[x]].CMStatus24Count,
@@ -56,19 +55,11 @@ class Status extends Component {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey="loseFEC" name="Loss of FEC" fill="#8884d8" />
-          <Bar dataKey="recoverFEC" name="Regain FEC" fill="#82ca9d" />
+          <Bar dataKey="loseFEC" name="FEC errors over limit" fill="#8884d8" />
+          {/* <Bar dataKey="recoverFEC" name="FEC recovery on OFDM profile" fill="#82ca9d" /> */}
           <ReferenceArea x1={firstYesterday.name} />
         </BarChart>
       </ResponsiveContainer>
-      {/* <Typography>
-        Last event collection &amp; analysis time {' was '.concat(formatRelative(new Date(this.props.statusJson.currentStats.lastAnalysisDate), startOfToday()))}<br />
-        <br /><u>24 Hour totals:</u><br />
-        Loss of FEC: {(this.props.statusJson["24HoursAgoToNow"].CMStatus16Count) || 0}<br />
-        Recovery of FEC: {(this.props.statusJson["24HoursAgoToNow"].CMStatus24Count) || 0}<br />
-        T3 Timeouts: {(this.props.statusJson["24HoursAgoToNow"].T3TimeoutCount) || 0}<br />
-        T4 Timeouts: {(this.props.statusJson["24HoursAgoToNow"].T4TimeoutCount) || 0}
-      </Typography> */}
     </div>)
   }
 }

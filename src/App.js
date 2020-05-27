@@ -8,7 +8,7 @@ import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import DeveloperModeIcon from '@material-ui/icons/DeveloperMode'
-import { startOfToday, formatRelative } from 'date-fns'
+import { format } from 'date-fns'
 
 
 import './App.css';
@@ -71,7 +71,10 @@ class App extends Component {
         <Box mx={2}>
           { this.state.statusJson ? (
             <Typography>
-              Last event collection &amp; analysis time {' was '.concat(formatRelative(new Date(this.state.statusJson.currentStats.lastAnalysisDate), startOfToday()))}<br />
+              Last event collection time was { format(new Date(this.state.statusJson.currentStats.lastCollectionDate), 'pp')}<br />
+              Last event analysis time was { format(new Date(this.state.statusJson.currentStats.lastAnalysisDate), 'pp')}<br />
+              The last event collected was at { format(new Date(this.state.statusJson.currentStats.lastInsertionDate), 'pp')}<br />
+              FEC over limit count in last 24 hours: {(this.state.statusJson["current24HourDay"].CMStatus16Count) || 0}
             </Typography>
           ) : <br />}
           <Status statusJson={this.state.statusJson} />

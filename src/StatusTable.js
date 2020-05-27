@@ -49,7 +49,7 @@ export default function DenseTable() {
                 {row.time}
               </TableCell>
               <TableCell style={{ width: "10%", padding: "6px", fontSize: "9pt" }}>{row.priority}</TableCell>
-              <TableCell style={{ width: "75%", padding: "6px", fontSize: "9pt" }}>{row.description}</TableCell>
+              <TableCell style={{ WebkitTextSizeAdjust: "100%", width: "75%", padding: "6px", fontSize: "9pt" }}>{row.description}</TableCell>
             </TableRow>
           ))}
         </TableBody>
