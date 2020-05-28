@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { isYesterday, format } from 'date-fns'
+import { isToday, isYesterday, format } from 'date-fns'
 
 import {
   BarChart,
@@ -16,37 +16,43 @@ import {
 class Status extends Component {
 
   formatStatus(status) {
-    const hourKeys = ['currentHour', 'minus01Hour', 'minus02Hours', 'minus03Hours', 'minus04Hours', 'minus05Hours',
-      'minus06Hours', 'minus07Hours', 'minus08Hours', 'minus09Hours', 'minus10Hours', 'minus11Hours',
-      'minus12Hours', 'minus13Hours', 'minus14Hours', 'minus15Hours', 'minus16Hours', 'minus17Hours',
-      'minus18Hours', 'minus19Hours', 'minus20Hours', 'minus21Hours', 'minus22Hours', 'minus23Hours'];
+    const newToOldKeys = [
+      { key: 'currentHour', offset: 0 }, { key: 'minus01Hour', offset: 1 }, { key: 'minus02Hours', offset: 2 },
+      { key: 'minus03Hours', offset: 3 }, { key: 'minus04Hours', offset: 4 }, { key: 'minus05Hours', offset: 5 },
+      { key: 'minus06Hours', offset: 6 }, { key: 'minus07Hours', offset: 7 }, { key: 'minus08Hours', offset: 8 },
+      { key: 'minus09Hours', offset: 9 }, { key: 'minus10Hours', offset: 10 }, { key: 'minus11Hours', offset: 11 },
+      { key: 'minus12Hours', offset: 12 }, { key: 'minus13Hours', offset: 13 }, { key: 'minus14Hours', offset: 14 },
+      { key: 'minus15Hours', offset: 15 }, { key: 'minus16Hours', offset: 16 }, { key: 'minus17Hours', offset: 17 },
+      { key: 'minus18Hours', offset: 18 }, { key: 'minus19Hours', offset: 19 }, { key: 'minus20Hours', offset: 20 },
+      { key: 'minus21Hours', offset: 21 }, { key: 'minus22Hours', offset: 22 }, { key: 'minus23Hours', offset: 23 }
+    ];
+    const oldToNewKeys = [...newToOldKeys].reverse();
     const oneHour = 1000 * 60 * 60;
     let lastAnalysisDate = new Date(status.currentStats.lastAnalysisDate).valueOf();
     let hours = [...Array(24).keys()].map(x => {
-      let hoursAgo = new Date(lastAnalysisDate - (oneHour * x));
+      let key = this.props.newToOld ? newToOldKeys[x] : oldToNewKeys[x];
+      let hoursAgo = new Date(lastAnalysisDate - (key.offset * oneHour));
       return {
         'name': format(hoursAgo, 'hbbbbb'),
         'date': hoursAgo,
-        'loseFEC': status[hourKeys[x]].CMStatus16Count,
-        'recoverFEC': status[hourKeys[x]].CMStatus24Count,
-        't3': status[hourKeys[x]].T3TimeoutCount,
-        't4': status[hourKeys[x]].T4TimeoutCount
+        'loseFEC': status[key.key].CMStatus16Count,
+        'recoverFEC': status[key.key].CMStatus24Count,
+        't3': status[key.key].T3TimeoutCount,
+        't4': status[key.key].T4TimeoutCount
       }
     });
-    let firstYesterday = hours.find(x => {
-      return isYesterday(x.date);
-    });
+    let dayBoundary = this.props.newToOld ? (hours.find(x => { return isYesterday(x.date);})) : hours.find(x => { return isToday(x.date);});
     return {
       'hours': hours,
-      'firstYesterday': firstYesterday
+      'dayBoundary': dayBoundary
     }
   }
 
   render() {
-    if(!this.props.statusJson) {
+    if (!this.props.statusJson) {
       return null;
     }
-    const {hours, firstYesterday} = this.formatStatus(this.props.statusJson);
+    const { hours, dayBoundary } = this.formatStatus(this.props.statusJson);
     return (<div>
       <ResponsiveContainer height={400}>
         <BarChart data={hours} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
@@ -56,8 +62,7 @@ class Status extends Component {
           <Tooltip />
           <Legend />
           <Bar dataKey="loseFEC" name="FEC errors over limit" fill="#8884d8" />
-          {/* <Bar dataKey="recoverFEC" name="FEC recovery on OFDM profile" fill="#82ca9d" /> */}
-          <ReferenceArea x1={firstYesterday.name} />
+          {this.props.newToOld ? <ReferenceArea x1={dayBoundary.name} /> : <ReferenceArea x2={dayBoundary.name} /> }
         </BarChart>
       </ResponsiveContainer>
     </div>)

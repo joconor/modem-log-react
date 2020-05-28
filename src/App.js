@@ -77,7 +77,7 @@ class App extends Component {
               FEC over limit count in last 24 hours: {(this.state.statusJson["current24HourDay"].CMStatus16Count) || 0}
             </Typography>
           ) : <br />}
-          <Status statusJson={this.state.statusJson} />
+          <Status statusJson={this.state.statusJson} newToOld={false} />
           <StatusTable />
           {this.state.showDebugInfo ? (
             <Debug debugInfo={this.state.statusJson} />
