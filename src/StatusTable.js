@@ -17,21 +17,15 @@ const useStyles = makeStyles({
   },
 });
 
-function createData(index, time, priority, description) {
-  return { index, time, priority, description };
-}
-
-const rows = [
-  createData(0, '2020-05-26, 09:00:33', 'Notice (6)', 'CM-STATUS message sent. Event Type Code: 24; Chan ID: 33 ; DSID: N/A; MAC Addr: N/A; OFDM/OFDMA Profile ID: 1 2 3 .;CM-MAC=3c:37:86:e8:47:20;CMTS-MAC=00:17:10:8d:ef:a4;CM-QOS=1.1;CM-VER=3.1;'),
-  createData(1, '2020-05-26, 09:00:24', 'Notice (6)', 'CM-STATUS message sent. Event Type Code: 16; Chan ID: 33 ; DSID: N/A; MAC Addr: N/A; OFDM/OFDMA Profile ID: 3 .;CM-MAC=3c:37:86:e8:47:20;CMTS-MAC=00:17:10:8d:ef:a4;CM-QOS=1.1;CM-VER=3.1;'),
-  createData(2, '2020-05-26, 04:24:51', 'Error (4)', 'DHCP RENEW WARNING - Field invalid in response v4 option;CM-MAC=3c:37:86:e8:47:20;CMTS-MAC=00:17:10:8d:ef:a4;CM-QOS=1.1;CM-VER=3.1;'),
-  createData(3, '2020-05-26, 04:20:37', 'Notice (6)', 'CM-STATUS message sent. Event Type Code: 24; Chan ID: 33 ; DSID: N/A; MAC Addr: N/A; OFDM/OFDMA Profile ID: 1 2 3 .;CM-MAC=3c:37:86:e8:47:20;CMTS-MAC=00:17:10:8d:ef:a4;CM-QOS=1.1;CM-VER=3.1;'),
-  createData(4, '2020-05-26, 04:20:25', 'Notice (6)', 'CM-STATUS message sent. Event Type Code: 16; Chan ID: 33 ; DSID: N/A; MAC Addr: N/A; OFDM/OFDMA Profile ID: 3 .;CM-MAC=3c:37:86:e8:47:20;CMTS-MAC=00:17:10:8d:ef:a4;CM-QOS=1.1;CM-VER=3.1;'),
-];
-
-export default function DenseTable() {
+export default function DenseTable(props) {
   const classes = useStyles();
 
+  if(!props.events){
+    return null;
+  };
+  let rows = props.events.map((event, index) => {
+    return {index, ...event};
+  });
   return (
     <TableContainer component={Paper}>
       <Table className={classes.table} size="small" aria-label="a dense table">

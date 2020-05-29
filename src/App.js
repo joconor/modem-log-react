@@ -8,7 +8,7 @@ import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import DeveloperModeIcon from '@material-ui/icons/DeveloperMode'
-import { format } from 'date-fns'
+import { format, endOfHour, startOfHour, subHours, parseISO, getUnixTime } from 'date-fns'
 
 
 import './App.css';
@@ -16,7 +16,7 @@ import Status from './Status';
 import StatusTable from './StatusTable';
 import Debug from './Debug';
 
-import { getStatus } from './api';
+import { getStatus, getEvents } from './api';
 
 class App extends Component {
 
@@ -27,7 +27,8 @@ class App extends Component {
       showDebugInfo: false,
       debugInfo: [],
       statusJson: null,
-      error: null
+      error: null,
+      events: null
     }
   }
 
@@ -36,7 +37,14 @@ class App extends Component {
       this.setState({ statusJson: await getStatus() });
     } catch (error) {
       this.setState({ error: error.message })
-    }
+    };
+    let to = endOfHour(parseISO(this.state.statusJson.currentStats.lastAnalysisDate));
+    let from = startOfHour(subHours(to,23));
+    try {
+      this.setState({ events: await getEvents(getUnixTime(from), getUnixTime(to)) });
+    } catch (error) {
+      this.setState({ error: error.message })
+    };
   }
 
   async componentDidMount() {
@@ -78,7 +86,7 @@ class App extends Component {
             </Typography>
           ) : <br />}
           <Status statusJson={this.state.statusJson} newToOld={false} />
-          <StatusTable />
+          <StatusTable events={this.state.events} />
           {this.state.showDebugInfo ? (
             <Debug debugInfo={this.state.statusJson} />
           ) : (<br />)}
