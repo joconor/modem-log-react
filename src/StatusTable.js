@@ -23,8 +23,9 @@ export default function DenseTable(props) {
   if(!props.events){
     return null;
   };
-  let rows = props.events.map((event, index) => {
-    return {index, ...event};
+  let rows = [...props.events].reverse().map((event, index) => {
+    let localTime = new Date(event.time).toLocaleString();
+    return {index, ...event, localTime};
   });
   return (
     <TableContainer component={Paper}>
@@ -40,7 +41,7 @@ export default function DenseTable(props) {
           {rows.map((row) => (
             <TableRow key={row.index}>
               <TableCell style={{ width: "15%", padding: "6px", fontSize: "9pt" }} component="th" scope="row">
-                {row.time}
+                {row.localTime}
               </TableCell>
               <TableCell style={{ width: "10%", padding: "6px", fontSize: "9pt" }}>{row.priority}</TableCell>
               <TableCell style={{ WebkitTextSizeAdjust: "100%", width: "75%", padding: "6px", fontSize: "9pt" }}>{row.description}</TableCell>
