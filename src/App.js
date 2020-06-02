@@ -79,13 +79,15 @@ class App extends Component {
         <Box mx={2}>
           { this.state.statusJson ? (
             <Typography>
-              Last event collection time was { format(new Date(this.state.statusJson.currentStats.lastCollectionDate), 'pp')}<br />
-              Last event analysis time was { format(new Date(this.state.statusJson.currentStats.lastAnalysisDate), 'pp')}<br />
+              Last event collection time was { format(new Date(this.state.statusJson.currentStats.lastCollectionDate), 'pp')}; analysis was { format(new Date(this.state.statusJson.currentStats.lastAnalysisDate), 'pp')}<br />
               The last event collected was at { format(new Date(this.state.statusJson.currentStats.lastInsertionDate), 'pp')}<br />
               FEC over limit count in last 24 hours: {(this.state.statusJson["current24HourDay"].CMStatus16Count) || 0}
             </Typography>
           ) : <br />}
           <Status statusJson={this.state.statusJson} newToOld={false} />
+          <Typography>
+            <u>All events in the last 24 hours:</u>
+          </Typography>
           <StatusTable events={this.state.events} />
           {this.state.showDebugInfo ? (
             <Debug debugInfo={this.state.statusJson} />
