@@ -72,7 +72,7 @@ class App extends Component {
           </Typography>
             <section style={{ marginLeft: 'auto', marginRight: -12 }}>
               <IconButton color="inherit" onClick={this.onSubmit}><RefreshIcon /></IconButton>
-              <IconButton color="inherit" onClick={this.toggleDevInfo}><DeveloperModeIcon /></IconButton>
+              {/* <IconButton color="inherit" onClick={this.toggleDevInfo}><DeveloperModeIcon /></IconButton> */}
             </section>
           </Toolbar>
         </AppBar>
