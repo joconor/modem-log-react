@@ -14,4 +14,10 @@ export const getEvents = async (from, to) => {
     let response = await fetch(urlString);
     let data = await response.json();
     return data;
+};
+
+export const getHistogram = async () => {
+    let response = await fetch(`${HOST}/fec-error-histogram`);
+    let data = await response.json();
+    return data;
 }

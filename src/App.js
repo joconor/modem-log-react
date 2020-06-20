@@ -15,8 +15,9 @@ import './App.css';
 import Status from './Status';
 import StatusTable from './StatusTable';
 import Debug from './Debug';
+import Histogram from './Histogram';
 
-import { getStatus, getEvents } from './api';
+import { getStatus, getEvents, getHistogram } from './api';
 
 class App extends Component {
 
@@ -28,7 +29,8 @@ class App extends Component {
       debugInfo: [],
       statusJson: null,
       error: null,
-      events: null
+      events: null,
+      histogram: null
     }
   }
 
@@ -42,6 +44,11 @@ class App extends Component {
     let from = startOfHour(subHours(to,23));
     try {
       this.setState({ events: await getEvents(getUnixTime(from), getUnixTime(to)) });
+    } catch (error) {
+      this.setState({ error: error.message })
+    };
+    try {
+      this.setState({ histogram: await getHistogram() });
     } catch (error) {
       this.setState({ error: error.message })
     };
@@ -85,6 +92,7 @@ class App extends Component {
             </Typography>
           ) : <br />}
           <Status statusJson={this.state.statusJson} newToOld={false} />
+          <Histogram histogram={this.state.histogram} />
           <Typography>
             <u>All events in the last 24 hours:</u>
           </Typography>
