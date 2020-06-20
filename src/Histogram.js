@@ -18,8 +18,10 @@ class Histogram extends Component{
 
   formatHistogram(histogram) {
     return Object.keys(histogram).sort().map(x => {
+      let now = new Date();
+      let offset = now.getTimezoneOffset();
       return {
-        'name': x,
+        'name': ((parseInt(x) - offset/60 + 24) % 24).toString(),
         'count': histogram[x]
       }
     })
@@ -37,7 +39,7 @@ class Histogram extends Component{
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey="count" name="All FEC over limit events in this hour" fill="#8884d8" />
+          <Bar dataKey="count" name="Hourly FEC over limit histogram" fill="#8884d8" />
         </BarChart>
       </ResponsiveContainer>
     </div>)
