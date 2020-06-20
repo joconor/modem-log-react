@@ -18,10 +18,9 @@ class Histogram extends Component{
 
   formatHistogram(histogram) {
     return Object.keys(histogram).sort().map(x => {
-      let now = new Date();
-      let offset = now.getTimezoneOffset();
       return {
-        'name': ((parseInt(x) - offset/60 + 24) % 24).toString(),
+        // Adjust the 24 hour 'name' for local timezone
+        'name': ((parseInt(x) - new Date().getTimezoneOffset() / 60 + 24) % 24).toString().padStart(2,"0"),
         'count': histogram[x]
       }
     })
