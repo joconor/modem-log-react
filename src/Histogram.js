@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 
-import Typography from '@material-ui/core/Typography';
-
 import {
   BarChart,
   Bar,
@@ -11,7 +9,6 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-  ReferenceArea
 } from 'recharts';
 
 class Histogram extends Component {

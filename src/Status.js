@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { isToday, isYesterday, format } from 'date-fns'
+import { format } from 'date-fns'
 
 import {
   BarChart,
@@ -12,6 +12,8 @@ import {
   ResponsiveContainer,
   ReferenceArea
 } from 'recharts';
+
+const timeFormatString = 'hbbbbb';
 
 class Status extends Component {
 
@@ -33,7 +35,7 @@ class Status extends Component {
       let key = this.props.newToOld ? newToOldKeys[x] : oldToNewKeys[x];
       let hoursAgo = new Date(lastAnalysisDate - (key.offset * oneHour));
       return {
-        'name': format(hoursAgo, 'hbbbbb'),
+        'name': format(hoursAgo, timeFormatString),
         'date': hoursAgo,
         'loseFEC': status[key.key].CMStatus16Count,
         'recoverFEC': status[key.key].CMStatus24Count,
@@ -41,18 +43,16 @@ class Status extends Component {
         't4': status[key.key].T4TimeoutCount
       }
     });
-    let dayBoundary = this.props.newToOld ? (hours.find(x => { return isYesterday(x.date);})) : hours.find(x => { return isToday(x.date);});
-    return {
-      'hours': hours,
-      'dayBoundary': dayBoundary
-    }
+    return hours
   }
 
   render() {
     if (!this.props.statusJson) {
       return null;
     }
-    const { hours, dayBoundary } = this.formatStatus(this.props.statusJson);
+    const hours = this.formatStatus(this.props.statusJson);
+    const endOfYesterdayLabel = format(new Date().setHours(23), timeFormatString);
+    const startOfTodayLabel = format(new Date().setHours(0), timeFormatString);
     return (<div>
       <ResponsiveContainer height={400}>
         <BarChart data={hours} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
@@ -62,7 +62,7 @@ class Status extends Component {
           <Tooltip />
           <Legend />
           <Bar dataKey="loseFEC" name="FEC errors over limit" fill="#8884d8" />
-          {this.props.newToOld ? <ReferenceArea x1={dayBoundary.name} /> : <ReferenceArea x2={dayBoundary.name} /> }
+          {this.props.newToOld ? <ReferenceArea x1={endOfYesterdayLabel} /> : <ReferenceArea x2={startOfTodayLabel} /> }
         </BarChart>
       </ResponsiveContainer>
     </div>)

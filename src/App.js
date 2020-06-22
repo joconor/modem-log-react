@@ -7,7 +7,6 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
 import RefreshIcon from '@material-ui/icons/Refresh';
-import DeveloperModeIcon from '@material-ui/icons/DeveloperMode'
 import { format, endOfHour, startOfHour, subHours, parseISO, getUnixTime } from 'date-fns'
 
 
@@ -79,7 +78,6 @@ class App extends Component {
           </Typography>
             <section style={{ marginLeft: 'auto', marginRight: -12 }}>
               <IconButton color="inherit" onClick={this.onSubmit}><RefreshIcon /></IconButton>
-              {/* <IconButton color="inherit" onClick={this.toggleDevInfo}><DeveloperModeIcon /></IconButton> */}
             </section>
           </Toolbar>
         </AppBar>
