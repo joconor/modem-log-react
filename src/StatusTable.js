@@ -17,6 +17,35 @@ const useStyles = makeStyles({
   },
 });
 
+function descriptionForCmStatus16Event(event) {
+  var items = [];
+  items.push(event.descriptionArray['01']);
+  items.push(event.descriptionArray['02']);
+  items.push(event.descriptionArray['05']);
+  return items.join('; ');
+};
+
+function descriptionForCmStatus24Event(event) {
+  var items = [];
+  items.push(event.descriptionArray['01']);
+  items.push(event.descriptionArray['02']);
+  items.push(event.descriptionArray['05']);
+  return items.join('; ');
+};
+
+const messageDescriptions = {
+  "CM-STATUS message sent. Event Type Code: 16": descriptionForCmStatus16Event,
+  "CM-STATUS message sent. Event Type Code: 24": descriptionForCmStatus24Event,
+};
+
+function descriptionForEvent(event) {
+  if(messageDescriptions[event.descriptionArray['01']]){
+    return (messageDescriptions[event.descriptionArray['01']](event));
+  } else {
+    return event.description;
+  }
+};
+
 export default function DenseTable(props) {
   const classes = useStyles();
 
@@ -44,7 +73,7 @@ export default function DenseTable(props) {
                 {row.localTime}
               </TableCell>
               <TableCell style={{ width: "10%", padding: "6px", fontSize: "9pt" }}>{row.priority}</TableCell>
-              <TableCell style={{ WebkitTextSizeAdjust: "100%", width: "75%", padding: "6px", fontSize: "9pt" }}>{row.description}</TableCell>
+              <TableCell style={{ WebkitTextSizeAdjust: "100%", width: "75%", padding: "6px", fontSize: "9pt" }}>{descriptionForEvent(row)}</TableCell>
             </TableRow>
           ))}
         </TableBody>
