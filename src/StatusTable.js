@@ -33,9 +33,16 @@ function descriptionForCmStatus24Event(event) {
   return items.join('; ');
 };
 
+function descriptionForDHCPRenewWarning(event) {
+  var items = [];
+  items.push(event.descriptionArray['01']);
+  return items.join('; ');
+};
+
 const messageDescriptions = {
   "CM-STATUS message sent. Event Type Code: 16": descriptionForCmStatus16Event,
   "CM-STATUS message sent. Event Type Code: 24": descriptionForCmStatus24Event,
+  "DHCP RENEW WARNING - Field invalid in response v4 option": descriptionForDHCPRenewWarning,
 };
 
 function descriptionForEvent(event) {
