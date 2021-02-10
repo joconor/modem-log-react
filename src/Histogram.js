@@ -34,8 +34,8 @@ class Histogram extends Component {
   }
   render() {
     const bins = this.formatHistogram(this.props.histogram);
-    return (<div>
-      <ResponsiveContainer height={400}>
+    return (
+      <ResponsiveContainer>
         <BarChart data={bins} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
@@ -45,7 +45,7 @@ class Histogram extends Component {
           <Bar dataKey="count" name="Hourly FEC over limit histogram" fill="#8884d8" />
         </BarChart>
       </ResponsiveContainer>
-    </div>)
+    )
   }
 }
 

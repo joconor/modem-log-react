@@ -53,8 +53,8 @@ class Status extends Component {
     const hours = this.formatStatus(this.props.statusJson);
     const endOfYesterdayLabel = format(new Date().setHours(23), timeFormatString);
     const startOfTodayLabel = format(new Date().setHours(0), timeFormatString);
-    return (<div>
-      <ResponsiveContainer height={400}>
+    return (
+      <ResponsiveContainer>
         <BarChart data={hours} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
@@ -65,7 +65,7 @@ class Status extends Component {
           {this.props.newToOld ? <ReferenceArea x1={endOfYesterdayLabel} /> : <ReferenceArea x2={startOfTodayLabel} /> }
         </BarChart>
       </ResponsiveContainer>
-    </div>)
+    )
   }
 }
 

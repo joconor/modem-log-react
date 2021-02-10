@@ -89,8 +89,12 @@ class App extends Component {
               FEC over limit count in last 24 hours: {(this.state.statusJson["current24HourDay"].CMStatus16Count) || 0}
             </Typography>
           ) : <br />}
-          <Status statusJson={this.state.statusJson} newToOld={false} />
-          <Histogram histogram={this.state.histogram} />
+          <Box height={400} >
+            <Status statusJson={this.state.statusJson} newToOld={false} />
+          </Box>
+          <Box height={400} >
+            <Histogram histogram={this.state.histogram} />
+          </Box>
           <Typography>
             <u>All events in the last 24 hours:</u>
           </Typography>
