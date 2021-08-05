@@ -17,39 +17,25 @@ const useStyles = makeStyles({
   },
 });
 
-function descriptionForCmStatus16Event(event) {
+function descriptionForType125Event(event) {
+  // Use items 1, 2, and 5 from the description Array
   var items = [];
   items.push(event.descriptionArray['01']);
   items.push(event.descriptionArray['02']);
   items.push(event.descriptionArray['05']);
-  return items.join('; ');
-};
-
-function descriptionForCmStatus24Event(event) {
-  var items = [];
-  items.push(event.descriptionArray['01']);
-  items.push(event.descriptionArray['02']);
-  items.push(event.descriptionArray['05']);
-  return items.join('; ');
-};
-
-function descriptionForDHCPRenewWarning(event) {
-  var items = [];
-  items.push(event.descriptionArray['01']);
   return items.join('; ');
 };
 
 const messageDescriptions = {
-  "CM-STATUS message sent. Event Type Code: 16": descriptionForCmStatus16Event,
-  "CM-STATUS message sent. Event Type Code: 24": descriptionForCmStatus24Event,
-  "DHCP RENEW WARNING - Field invalid in response v4 option": descriptionForDHCPRenewWarning,
+  "CM-STATUS message sent. Event Type Code: 16": descriptionForType125Event,
+  "CM-STATUS message sent. Event Type Code: 24": descriptionForType125Event,
 };
 
 function descriptionForEvent(event) {
   if(messageDescriptions[event.descriptionArray['01']]){
     return (messageDescriptions[event.descriptionArray['01']](event));
   } else {
-    return event.description;
+    return event.descriptionArray['01'];
   }
 };
 
