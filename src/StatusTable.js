@@ -17,26 +17,21 @@ const useStyles = makeStyles({
   },
 });
 
-function descriptionForType125Event(event) {
-  // Use items 1, 2, and 5 from the description Array
-  var items = [];
-  items.push(event.descriptionArray['01']);
-  items.push(event.descriptionArray['02']);
-  items.push(event.descriptionArray['05']);
-  return items.join('; ');
-};
+const messageDescriptionArray = [
+  [/^CM-STATUS message sent\. Event Type Code: (?:16|24).*/, ['01','02','05']],
+  [/^Honoring MDD.*/, ['01','02']],
+  [/^DS profile assignment change\..*/, ['01','02','03']]
+];
 
-const messageDescriptions = {
-  "CM-STATUS message sent. Event Type Code: 16": descriptionForType125Event,
-  "CM-STATUS message sent. Event Type Code: 24": descriptionForType125Event,
-};
-
-function descriptionForEvent(event) {
-  if(messageDescriptions[event.descriptionArray['01']]){
-    return (messageDescriptions[event.descriptionArray['01']](event));
-  } else {
+function matchFromArray(event) {
+  let foundIndex = messageDescriptionArray.findIndex(element => event.descriptionArray['01'].match(element[0]));
+  if(foundIndex === -1) {
     return event.descriptionArray['01'];
-  }
+  } else {
+    let descriptionStrings = [];
+    messageDescriptionArray[foundIndex][1].forEach(element => descriptionStrings.push(event.descriptionArray[element]));
+    return descriptionStrings.join('; ');
+  };
 };
 
 export default function DenseTable(props) {
@@ -66,7 +61,7 @@ export default function DenseTable(props) {
                 {row.localTime}
               </TableCell>
               <TableCell style={{ width: "10%", padding: "6px", fontSize: "9pt" }}>{row.priority}</TableCell>
-              <TableCell style={{ WebkitTextSizeAdjust: "100%", width: "75%", padding: "6px", fontSize: "9pt" }}>{descriptionForEvent(row)}</TableCell>
+              <TableCell style={{ WebkitTextSizeAdjust: "100%", width: "75%", padding: "6px", fontSize: "9pt" }}>{matchFromArray(row)}</TableCell>
             </TableRow>
           ))}
         </TableBody>
