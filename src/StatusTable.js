@@ -17,12 +17,21 @@ const useStyles = makeStyles({
   },
 });
 
+// An Array of Arrays
+// First element in each array is a regex to match against.
+// Second element in the array are the object property keys to
+// use to extract the useful parts of an event description from
+// event.descriptionArray if we match against the first element regex
 const messageDescriptionArray = [
   [/^CM-STATUS message sent\. Event Type Code: (?:16|24).*/, ['01','02','05']],
   [/^Honoring MDD.*/, ['01','02']],
   [/^DS profile assignment change\..*/, ['01','02','03']]
 ];
 
+// Using first item in event description object, match against the regex in messageDescriptionArray
+// If no match, default to first item in event description object as the entire event description
+// If a regex match is found, then assemble a full event description from the appropriate elements
+// of the event description object.
 function matchFromArray(event) {
   let foundIndex = messageDescriptionArray.findIndex(element => event.descriptionArray['01'].match(element[0]));
   if(foundIndex === -1) {
