@@ -24,6 +24,7 @@ const useStyles = makeStyles({
 // event.descriptionArray if we match against the first element regex
 const messageDescriptionArray = [
   [/^CM-STATUS message sent\. Event Type Code: (?:16|24).*/, ['01','02','05']],
+  [/^CM-STATUS message sent\. Event Type Code: (?:20|22).*/, ['01','02']],
   [/^Honoring MDD.*/, ['01','02']],
   [/^DS profile assignment change\..*/, ['01','02','03']]
 ];
